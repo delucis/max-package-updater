@@ -24,7 +24,7 @@ If the [repository field](https://docs.npmjs.com/files/package.json#repository) 
 }
 ```
 
-Both of the below resolve to:
+Both of the above resolve to:
 
     https://raw.githubusercontent.com/delucis/max-package-updater/master/package.json
 
