@@ -6,7 +6,7 @@
 autowatch = 1;
 
 // post package details to Max window on startup
-var lPinfo = new localPackage();
+var lPinfo = new localPackageInfo();
 var rPinfo = new remotePackage(lPinfo);
 post("\n" + lPinfo.name + ", v" + lPinfo.version);
 post("\n     ", lPinfo.author, "\n");
@@ -14,11 +14,11 @@ post("\n     ", lPinfo.dir, "\n");
 
 
 /**
-* localPackage()
+* localPackageInfo()
 * returns an object with information from local package.json
 *
 * usage:
-* var o = new localPackage();
+* var o = new localPackageInfo();
 *
 * o.author   = (string)  author information from package.json
 * o.dict     = (dict)    dictionary containing entire contents of package.json
@@ -27,31 +27,31 @@ post("\n     ", lPinfo.dir, "\n");
 * o.version  = (string)  local package version
 *
 */
-function localPackage() {
+function localPackageInfo() {
   // get path to this package
   var thisFile = new File("mpu-extensions.js");
   var regex = /([^\/\\]*)$/i;
   var packageDir = thisFile.foldername.replace(regex, "");
   // load package.json to retrieve details
-  var localPackage = new Dict;
-  localPackage.import_json(packageDir + "package.json");
+  var localPackageInfo = new Dict;
+  localPackageInfo.import_json(packageDir + "package.json");
   // export package information as variables
   this.dir = packageDir;
-  this.name = localPackage.get("name");
-  this.version = localPackage.get("version");
-  this.author = localPackage.get("author");
-  this.dict = localPackage;
+  this.name = localPackageInfo.get("name");
+  this.version = localPackageInfo.get("version");
+  this.author = localPackageInfo.get("author");
+  this.dict = localPackageInfo;
 }
 
 /**
-* remotePackage(localPackage)
+* remotePackage(localPackageInfo)
 * returns an object with information from a remote package.json
 *
 * arguments:
-* localPackage  = (object) as returned by localPackage()
+* localPackageInfo  = (object) as returned by localPackageInfo()
 *
 * usage:
-* var o = new remotePackage(localPackage);
+* var o = new remotePackage(localPackageInfo);
 *
 * o.author   = (string)  author information from package.json
 * o.dict     = (dict)    dictionary containing entire contents of package.json
@@ -59,34 +59,34 @@ function localPackage() {
 * o.version  = (string)  remote package version
 *
 */
-function remotePackage(localPackage) {
-  var repoURL = getRepositoryURL(localPackage);
+function remotePackage(localPackageInfo) {
+  var repoURL = getPackageInfoURL(localPackageInfo);
   if (repoURL) {
     post(repoURL, "\n");
   }
 }
 
 /**
-* getRepositoryURL(localPackage)
+* getPackageInfoURL(localPackageInfo)
 * returns a string containing the URL to a remote package.json by parsing
 * local package.json for “package-info” and “repository” fields
 *
 * arguments:
-* localPackage  = (object) as returned by localPackage()
+* localPackageInfo  = (object) as returned by localPackageInfo()
 *
 * usage:
-* var localInfo = new localPackage();
-* var repoURL = getRepositoryURL(localInfo);
+* var localInfo = new localPackageInfo();
+* var repoURL = getPackageInfoURL(localInfo);
 * => https://raw.githubusercontent.com/username/reponame/master/package.json
 *
 * s          = (string)   URL of package.json resource
 *            = (boolean)  false if synthesis not possible
 *
 */
-function getRepositoryURL(localPackage) {
+function getPackageInfoURL(localPackageInfo) {
   // retrieve data from local package.json
-  var repositoryField = localPackage.dict.get("repository");
-  var packageInfoField = localPackage.dict.get("package-info");
+  var repositoryField = localPackageInfo.dict.get("repository");
+  var packageInfoField = localPackageInfo.dict.get("package-info");
   // initialise variables
   var repositoryString = null;
   var packageInfoURL = null;
