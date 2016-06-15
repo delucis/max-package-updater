@@ -44,25 +44,38 @@ function localPackageInfo() {
 }
 
 /**
-* remotePackage(localPackageInfo)
-* returns an object with information from a remote package.json
+* requestRemotePackage(localPackageInfo, callback)
+* request a remote package.json
 *
 * arguments:
-* localPackageInfo  = (object) as returned by localPackageInfo()
+* localPackageInfo  = (object)    as returned by localPackageInfo()
+* callback          = (function)  handle the server response
 *
 * usage:
-* var o = new remotePackage(localPackageInfo);
-*
-* o.author   = (string)  author information from package.json
-* o.dict     = (dict)    dictionary containing entire contents of package.json
-* o.name     = (string)  remote package name
-* o.version  = (string)  remote package version
+* requestRemotePackage(localPackageInfo, function() {
+*   // handle response
+* });
 *
 */
-function remotePackage(localPackageInfo) {
-  var repoURL = getPackageInfoURL(localPackageInfo);
-  if (repoURL) {
-    post(repoURL, "\n");
+function requestRemotePackage(localPackageInfo, callback) {
+  // make sure a callback function is provided
+  if (!callback || typeof callback !== "function") {
+    error("Error: no callback function defined for requestRemotePackage()...");
+    return false;
+  }
+  // figure out what URL to query based on local package.json
+  var packageInfoURL = getPackageInfoURL(localPackageInfo);
+  if (packageInfoURL) {
+    // create new request object
+    var request = new XMLHttpRequest();
+    // request the URL of the remote package.json
+    request.open("GET", packageInfoURL);
+    // set callback function
+    request.onreadystatechange = callback;
+    // trigger request
+    request.send();
+  } else {
+    return false;
   }
 }
 
