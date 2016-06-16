@@ -2,6 +2,10 @@
 
 A module for Max 7 that enables a Max package to check for and install updates.
 
+## WORK IN PROGRESS
+
+See progress [over on issue #1](https://github.com/delucis/max-package-updater/issues/1).
+
 ## Specifying a remote `package.json`
 
 ### Github repositories
