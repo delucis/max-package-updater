@@ -7,11 +7,20 @@ autowatch = 1;
 
 // post package details to Max window on startup
 var lPinfo = new localPackageInfo();
-var rPinfo = new remotePackage(lPinfo);
 post("\n" + lPinfo.name + ", v" + lPinfo.version);
 post("\n     ", lPinfo.author, "\n");
 post("\n     ", lPinfo.dir, "\n");
 
+// request remote package information
+var request;
+requestRemotePackage(lPinfo, function () {
+  var rPinfo = new remotePackageInfo(request.response);
+  if (typeof rPinfo !== 'undefined' && rPinfo !== null) {
+    // compare versions (or pass function)
+  } else {
+    error("Error: failed to retrieve remote package.json...");
+  }
+});
 
 /**
 * localPackageInfo()
