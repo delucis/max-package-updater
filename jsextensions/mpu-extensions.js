@@ -44,11 +44,44 @@ function localPackageInfo() {
 }
 
 /**
-* requestRemotePackage(localPackageInfo, callback)
+* remotePackageInfo(response)
+* returns an object with information from remote package.json
+*
+* arguments:
+* response   = (object)  a response object handed off from requestRemotePackage()
+*
+* usage:
+* var o = new remotePackageInfo(response);
+*
+* o.author   = (string)  author information from remote package.json
+* o.dict     = (dict)    dictionary containing entire contents of remote package.json
+* o.name     = (string)  remote package name
+* o.version  = (string)  remote package version
+*
+*/
+function remotePackageInfo(response) {
+  // Make sure server responded with valid JSON
+  try { JSON.parse(response); }
+	catch (e) {
+		error("Error: server response is not JSON...");
+		return false;
+	}
+  // parse server response into dictionary
+  var remotePackageInfo = new Dict;
+  remotePackageInfo.parse(response);
+  this.name = remotePackageInfo.get("name");
+  this.version = remotePackageInfo.get("version");
+  this.author = remotePackageInfo.get("author");
+  this.dict = remotePackageInfo;
+}
+
+/**
+* requestRemotePackage(localPackageInfo, request, callback)
 * request a remote package.json
 *
 * arguments:
 * localPackageInfo  = (object)    as returned by localPackageInfo()
+* request           = (string)    variable name to hold our request
 * callback          = (function)  handle the server response
 *
 * usage:
@@ -67,7 +100,7 @@ function requestRemotePackage(localPackageInfo, callback) {
   var packageInfoURL = getPackageInfoURL(localPackageInfo);
   if (packageInfoURL) {
     // create new request object
-    var request = new XMLHttpRequest();
+    request = new XMLHttpRequest();
     // request the URL of the remote package.json
     request.open("GET", packageInfoURL);
     // set callback function
