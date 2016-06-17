@@ -18,9 +18,9 @@ requestRemotePackage(lPinfo, function () {
   if (validateRemotePackageInfo(lPinfo, rPinfo)) {
     // compare versions (or pass function)
     if (isUpdateAvailable(lPinfo, rPinfo)) {
-      post("An update is available!")
+      post("An update is available!");
     } else {
-      post("Your package is up-to-date.")
+      post("Your package is up-to-date.");
     }
   } else {
     error("Error: failed to retrieve remote package.json...\n");
@@ -52,7 +52,7 @@ function validateRemotePackageInfo(localPackageInfo, remotePackageInfo) {
     error("Error: the remote package’s name, ‘" + remotePackageInfo.name + "’, does not match the local package ‘" + lPinfo.name + "’...\n");
     return false;
   } else if (!remotePackageInfo.version) {
-    error("Error: remote package.json doesn’t contain a version field...\n")
+    error("Error: remote package.json doesn’t contain a version field...\n");
     return false;
   } else {
     return true;
@@ -254,7 +254,7 @@ function getPackageInfoURL(localPackageInfo) {
     }
   }
   else {
-    error("Error: packageInfoURL is undefined...\n")
+    error("Error: packageInfoURL is undefined...\n");
     return false;
   }
 }
@@ -279,7 +279,7 @@ function getPackageInfoURL(localPackageInfo) {
 */
 function synthesisePackageInfoURL(repositoryString) {
   if (typeof repositoryString !== "string" || repositoryString === null) {
-    error("Error: formatRepositoryString() expects argument to be of type string...")
+    error("Error: formatRepositoryString() expects argument to be of type string...");
     return false;
   }
   // patterns to match
@@ -321,7 +321,7 @@ function synthesisePackageInfoURL(repositoryString) {
 */
 function validateURL(url) {
   if (typeof url !== "string" || url === null) {
-    error("Error: validateURL() expects argument to be of type string...")
+    error("Error: validateURL() expects argument to be of type string...");
     return false;
   }
   // Regular Expression for URL validation by Diego Perini. License: MIT
