@@ -296,3 +296,39 @@ function validateURL(url) {
   var urlRegX = new RegExp("^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$", "i");
   return urlRegX.test(url);
 }
+
+/**
+* SemVer(version)
+* returns an object with details of a semantic version number
+*
+* arguments:
+* version     = (string)
+*
+* usage:
+* var myPackageVersion = 'v0.7.9-beta';
+* var sv = new SemVer(myPackageVersion);
+*
+* sv.version  = (string) '0.7.9'
+* sv.major    = (number)  0
+* sv.minor    = (number)  7
+* sv.patch    = (number)  9
+*
+*/
+function SemVer(version) {
+  if (typeof version !== 'string') {
+    error("Error: cleanSemVer() needs a string to operate on...\n");
+    return false;
+  }
+  // match valid semantic version strings (based on the LOOSE regular expression in npm/node-semver)
+  var semVerRegX = new RegExp("^[v=\\s]*([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-?((?:[0-9]+|\\d*[a-zA-Z-][a-zA-Z0-9-]*)(?:\\.(?:[0-9]+|\\d*[a-zA-Z-][a-zA-Z0-9-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$");
+  // remove any surrounding whitespace from version string, and test against regular expression
+  var v = version.trim().match(semVerRegX);
+  if (!v) {
+    console.error("Error: ‘" + v + "’ could not be parsed as a semantic version...\n");
+    return false;
+  }
+  this.major = +v[1];
+  this.minor = +v[2];
+  this.patch = +v[3];
+  this.version = this.major + '.' + this.minor + '.' + this.patch;
+}
