@@ -55,6 +55,34 @@ function validateRemotePackageInfo(localPackageInfo, remotePackageInfo) {
 }
 
 /**
+* isUpdateAvailable(localPackageInfo, remotePackageInfo)
+* returns true if remote package version is greater than that of local package
+*
+* arguments:
+* localPackageInfo  = (object)  as returned by localPackageInfo()
+* remotePackageInfo = (object)  as returned by remotePackageInfo(response)
+*
+* usage:
+* if(isUpdateAvailable(localPackageInfo, remotePackageInfo)) {
+*   // celebrate! an update is available
+* }
+*
+*/
+function isUpdateAvailable(localPackageInfo, remotePackageInfo) {
+  var localVersion = new SemVer(localPackageInfo.version);
+  var remoteVersion = new SemVer(remotePackageInfo.version);
+  if (remoteVersion.major > localVersion.major) {
+    return true;
+  } else if (remoteVersion.major === localVersion.major && remoteVersion.minor > localVersion.minor) {
+    return true;
+  } else if (remoteVersion.major === localVersion.major && remoteVersion.minor === localVersion.minor && remoteVersion.patch > localVersion.patch) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
 * localPackageInfo()
 * returns an object with information from local package.json
 *
