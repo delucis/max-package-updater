@@ -23,6 +23,38 @@ requestRemotePackage(lPinfo, function () {
 });
 
 /**
+* validateRemotePackageInfo(localPackageInfo, remotePackageInfo)
+* returns true if remote package is defined, specifies the same name as the
+* local package, and contains a version field
+*
+* arguments:
+* localPackageInfo  = (object)  as returned by localPackageInfo()
+* remotePackageInfo = (object)  as returned by remotePackageInfo(response)
+*
+* usage:
+* if(validateRemotePackageInfo(localPackageInfo, remotePackageInfo)) {
+*   // operate on valid package
+* } else {
+*   // throw invalid package error
+* }
+*
+*/
+function validateRemotePackageInfo(localPackageInfo, remotePackageInfo) {
+  if (typeof remotePackageInfo === 'undefined' || remotePackageInfo === null) {
+    error("Error: remote package undefined...\n");
+    return false;
+  } else if (remotePackageInfo.name !== localPackageInfo.name) {
+    error("Error: the remote package’s name, ‘" + remotePackageInfo.name + "’, does not match the local package ‘" + lPinfo.name + "’...\n");
+    return false;
+  } else if (!remotePackageInfo.version) {
+    error("Error: remote package.json doesn’t contain a version field...\n")
+    return false;
+  } else {
+    return true;
+  }
+}
+
+/**
 * localPackageInfo()
 * returns an object with information from local package.json
 *
