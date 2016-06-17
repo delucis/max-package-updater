@@ -235,7 +235,7 @@ function synthesisePackageInfoURL(repositoryString) {
     return false;
   }
 
-  var gitHubURL = "https://raw.githubusercontent.com/" + repoSlug + "/master/package-info.json";
+  var gitHubURL = "https://raw.githubusercontent.com/" + repoSlug + "/master/package.json";
   return gitHubURL;
 }
 
