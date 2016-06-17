@@ -17,6 +17,11 @@ requestRemotePackage(lPinfo, function () {
   var rPinfo = new remotePackageInfo(request.response);
   if (validateRemotePackageInfo(lPinfo, rPinfo)) {
     // compare versions (or pass function)
+    if (isUpdateAvailable(lPinfo, rPinfo)) {
+      post("An update is available!")
+    } else {
+      post("Your package is up-to-date.")
+    }
   } else {
     error("Error: failed to retrieve remote package.json...");
   }
