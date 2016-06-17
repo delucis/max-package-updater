@@ -15,7 +15,7 @@ post("\n     ", lPinfo.dir, "\n");
 var request;
 requestRemotePackage(lPinfo, function () {
   var rPinfo = new remotePackageInfo(request.response);
-  if (typeof rPinfo !== 'undefined' && rPinfo !== null) {
+  if (validateRemotePackageInfo(lPinfo, rPinfo)) {
     // compare versions (or pass function)
   } else {
     error("Error: failed to retrieve remote package.json...");
