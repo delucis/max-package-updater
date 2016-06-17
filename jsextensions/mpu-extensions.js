@@ -23,7 +23,7 @@ requestRemotePackage(lPinfo, function () {
       post("Your package is up-to-date.")
     }
   } else {
-    error("Error: failed to retrieve remote package.json...");
+    error("Error: failed to retrieve remote package.json...\n");
   }
 });
 
@@ -137,7 +137,7 @@ function remotePackageInfo(response) {
   // Make sure server responded with valid JSON
   try { JSON.parse(response); }
 	catch (e) {
-		error("Error: server response is not JSON...");
+		error("Error: server response is not JSON...\n");
 		return false;
 	}
   // parse server response into dictionary
@@ -167,7 +167,7 @@ function remotePackageInfo(response) {
 function requestRemotePackage(localPackageInfo, callback) {
   // make sure a callback function is provided
   if (!callback || typeof callback !== "function") {
-    error("Error: no callback function defined for requestRemotePackage()...");
+    error("Error: no callback function defined for requestRemotePackage()...\n");
     return false;
   }
   // figure out what URL to query based on local package.json
