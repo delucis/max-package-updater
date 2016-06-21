@@ -5,6 +5,9 @@
 
 autowatch = 1;
 
+// execute jsui test function
+testJSUI();
+
 // post package details to Max window on startup
 var lPinfo = new localPackageInfo();
 post("\n" + lPinfo.name + ", v" + lPinfo.version);
@@ -26,6 +29,83 @@ requestRemotePackage(lPinfo, function () {
     error("Error: failed to retrieve remote package.json...\n");
   }
 });
+
+/**
+* testJSUI()
+*
+*/
+function testJSUI() {
+  post("Testing jsui...\n");
+  var backgroundColor = [1,1,1,1];
+  var color = [0,0,0,1];
+  var fontFamily = "Lato Regular";
+  var fontSize = 13;
+  var content = "foo";
+  with (sketch) {
+    default2d();
+    glclearcolor(backgroundColor);
+    glclear();
+    glcolor(color);
+    moveto(0,0);
+    font(fontFamily);
+    fontsize(fontSize);
+    textalign("center","center");
+		text(content);
+  }
+  drawBaseGUI();
+}
+
+function onresize() {
+  testJSUI();
+}
+
+function drawBaseGUI() {
+  post("Drawing base GUI...\n");
+  var margins = new Object();
+  margins.x = 30;
+  margins.y = 20;
+  var colors = new Object();
+  colors.bg = [1, 1, 1, 1];
+  colors.text = [0, 0, 0, 1];
+  colors.highlight = [0.33, 0.54, 0.73, 1];
+  var fontFamily = new Object();
+  fontFamily.light = "Lato Light"
+  fontFamily.regular = "Lato Regular";
+  fontFamily.bold = "Lato Bold";
+  var fontSizes = new Object();
+  fontSizes.h1 = "28";
+  fontSizes.h2 = "15";
+  fontSizes.p = "14";
+  var content = "foo";
+  var localInf = new localPackageInfo();
+  with (sketch) {
+    default2d();
+    glclearcolor(colors.bg);
+    glclear();
+    textalign("left", "top");
+
+    // draw package name heading
+    moveto(screentoworld(margins.x, margins.y));
+    font(fontFamily.bold);
+    fontsize(fontSizes.h1);
+    glcolor(colors.text);
+		text(localInf.name);
+
+    // draw "local version" subheading
+    moveto(screentoworld(margins.x, margins.y+60));
+    font(fontFamily.light);
+    fontsize(fontSizes.h2);
+    glcolor(colors.highlight);
+    text("local version");
+
+    // draw local version number
+    moveto(screentoworld(margins.x, margins.y+90));
+    font(fontFamily.regular);
+    fontsize(fontSizes.p);
+    glcolor(colors.text);
+    text(localInf.version);
+  }
+}
 
 /**
 * validateRemotePackageInfo(localPackageInfo, remotePackageInfo)
