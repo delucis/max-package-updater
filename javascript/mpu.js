@@ -103,7 +103,8 @@ function isUpdateAvailable(localPackageInfo, remotePackageInfo) {
 */
 function localPackageInfo() {
   // get path to this package
-  var thisFile = new File("mpu-extensions.js");
+  var thisFileName = jsarguments[0];
+  var thisFile = new File(thisFileName);
   var regex = /([^\/\\]*)$/i;
   var packageDir = thisFile.foldername.replace(regex, "");
   // load package.json to retrieve details
