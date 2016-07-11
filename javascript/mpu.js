@@ -193,6 +193,12 @@ function Button(rect, currentInstance) {
     colors.text,
     colors.neutral
   );
+  this.instances.checkFailed = new buttonInstance(
+    "Couldn’t check for updates… Try again?",
+    colors.reverse,
+    colors.danger,
+    checkForUpdates
+  );
   this.instances.installUpdate = new buttonInstance(
     "Install update",
     colors.reverse,
