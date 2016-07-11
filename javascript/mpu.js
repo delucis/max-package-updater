@@ -524,7 +524,7 @@ function requestRemotePackage(localPackageInfo, callback) {
 function getPackageInfoURL(localPackageInfo) {
   // retrieve data from local package.json
   var repositoryField = localPackageInfo.dict.get("repository");
-  var packageInfoField = localPackageInfo.dict.get("package-info");
+  var packageInfoField = localPackageInfo.dict.get("config::mpu::package-info");
   // initialise variables
   var repositoryString = null;
   var packageInfoURL = null;

@@ -36,11 +36,15 @@ Both of the above resolve to:
 
 ### Self-hosted
 
-If you want to use an alternative hosting mechanism, and want to specify the precise URL of your remote `package.json`, include a non-standard `package-info` field in your `package.json`:
+If you want to use an alternative hosting mechanism, and want to specify the precise URL of your remote `package.json`, you can do so in the `config` section of your `package.json`:
 
 ```json
 {
-  "package-info": "http://www.myhome.eu/package.json"
+  "config": {
+    "mpu": {
+      "package-info": "http://www.myhome.eu/package.json"
+    }
+  }
 }
 ```
 
