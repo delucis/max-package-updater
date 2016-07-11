@@ -294,12 +294,13 @@ function isOnButton(x, y, btn) {
 *
 */
 function onidle(x, y) {
-  if (isOnButton(x, y, button) && button.state !== 1 && button.instances.current.enabled) {
+  var onButton = isOnButton(x, y, button);
+  if (onButton && button.state !== 1 && button.instances.current.enabled) {
     // when mouse first hovers over button
     button.state = 1;
     mgraphics.redraw();
     post(button.state, "\n");
-  } else if (button.state !== 0) {
+  } else if (!onButton && button.state !== 0) {
     // when mouse first leaves button
     button.state = 0;
     mgraphics.redraw();
