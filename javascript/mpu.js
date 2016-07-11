@@ -27,10 +27,10 @@ function checkForUpdates() {
     if (validateRemotePackageInfo(lPinfo, rPinfo)) {
       // compare versions (or pass function)
       if (isUpdateAvailable(lPinfo, rPinfo)) {
-        button.instances.current = button.instances.installUpdate;
+        MPU.button.instances.current = MPU.button.instances.installUpdate;
         post("An update is available!");
       } else {
-        button.instances.current = button.instances.checkUpToDate;
+        MPU.button.instances.current = MPU.button.instances.checkUpToDate;
         post("Your package is up-to-date.");
       }
     } else {
@@ -42,11 +42,11 @@ function checkForUpdates() {
 
 // variables for use in mgraphics
 var MPU = new Object;
-var margins = {
+MPU.margins = {
   x:        30,
   y:        20
 }
-var colors = {
+MPU.colors = {
   bg:       [1.,    1.,    1.,    1.],
   reverse:  [1.,    1.,    1.,    1.],
   text:     [0.15,  0.15,  0.15,  1.],
@@ -55,17 +55,17 @@ var colors = {
   neutral:  [0.88,  0.88,  0.88,  1.],
   danger:   [0.82,  0.41,  0.42,  1.]
 }
-var fontFamily = {
+MPU.fontFamily = {
   light:    "Lato Regular",
   regular:  "Lato Semibold",
   bold:     "Lato Heavy"
 }
-var fontSizes = {
+MPU.fontSizes = {
   h1:       "28",
   h2:       "15",
   p:        "14"
 }
-var button = new Button([margins.x, 150, 285, 45]);
+MPU.button = new Button([MPU.margins.x, 150, 285, 45]);
 
 function paint() {
   // draw package name heading
@@ -80,25 +80,25 @@ function paint() {
     drawP(rPinfo.version, [155, 90]);
   }
   // draw button
-  drawButton(button);
+  drawButton(MPU.button);
 }
 
 function drawH1(text, pos) {
-  drawText(text, pos, fontFamily.bold, fontSizes.h1, colors.text);
+  drawText(text, pos, MPU.fontFamily.bold, MPU.fontSizes.h1, MPU.colors.text);
 }
 
 function drawH2(text, pos) {
-  drawText(text, pos, fontFamily.light, fontSizes.h2, colors.info);
+  drawText(text, pos, MPU.fontFamily.light, MPU.fontSizes.h2, MPU.colors.info);
 }
 
 function drawP(text, pos) {
-  drawText(text, pos, fontFamily.regular, fontSizes.p, colors.text);
+  drawText(text, pos, MPU.fontFamily.regular, MPU.fontSizes.p, MPU.colors.text);
 }
 
 function drawText(text, pos, font, size, color) {
   mgraphics.select_font_face(font);
   mgraphics.set_font_size(size);
-  mgraphics.move_to(margins.x + pos[0], margins.y + pos[1] + mgraphics.font_extents()[0]);
+  mgraphics.move_to(MPU.margins.x + pos[0], MPU.margins.y + pos[1] + mgraphics.font_extents()[0]);
   mgraphics.set_source_rgba(color);
   mgraphics.text_path(text);
   mgraphics.fill();
@@ -133,11 +133,11 @@ function drawButton(btn) {
   mgraphics.rectangle(btn.rect);
   mgraphics.fill();
   // Draw button text
-  mgraphics.select_font_face(fontFamily.bold);
-  mgraphics.set_font_size(fontSizes.p);
+  mgraphics.select_font_face(MPU.fontFamily.bold);
+  mgraphics.set_font_size(MPU.fontSizes.p);
   // Calculate text position
-  var Xcoord = margins.x + (btn.rect[2] / 2) - (mgraphics.text_measure(btn.instances.current.text)[0] / 2);
-  var Ycoord = margins.y + btn.rect[1] + (mgraphics.font_extents()[0] / 2) + textOffset;
+  var Xcoord = MPU.margins.x + (btn.rect[2] / 2) - (mgraphics.text_measure(btn.instances.current.text)[0] / 2);
+  var Ycoord = MPU.margins.y + btn.rect[1] + (mgraphics.font_extents()[0] / 2) + textOffset;
   mgraphics.move_to(Xcoord, Ycoord);
   mgraphics.set_source_rgba(btn.instances.current.color);
   mgraphics.text_path(btn.instances.current.text);
@@ -179,46 +179,46 @@ function Button(rect, currentInstance) {
   this.instances = new Object();
   this.instances.checkForUpdates = new buttonInstance(
     "Check for updates",
-    colors.reverse,
-    colors.info,
+    MPU.colors.reverse,
+    MPU.colors.info,
     checkForUpdates
   );
   this.instances.checkingForUpdates = new buttonInstance(
     "Checking for updates...",
-    colors.text,
-    colors.neutral
+    MPU.colors.text,
+    MPU.colors.neutral
   );
   this.instances.checkUpToDate = new buttonInstance(
     "Your package is up to date!",
-    colors.text,
-    colors.neutral
+    MPU.colors.text,
+    MPU.colors.neutral
   );
   this.instances.checkFailed = new buttonInstance(
     "Couldn’t check for updates… Try again?",
-    colors.reverse,
-    colors.danger,
+    MPU.colors.reverse,
+    MPU.colors.danger,
     checkForUpdates
   );
   this.instances.installUpdate = new buttonInstance(
     "Install update",
-    colors.reverse,
-    colors.success,
+    MPU.colors.reverse,
+    MPU.colors.success,
     installUpdate
   );
   this.instances.installingUpdate = new buttonInstance(
     "Installing update...",
-    colors.text,
-    colors.neutral
+    MPU.colors.text,
+    MPU.colors.neutral
   );
   this.instances.installSucceeded = new buttonInstance(
     "Update installed!",
-    colors.text,
-    colors.neutral
+    MPU.colors.text,
+    MPU.colors.neutral
   );
   this.instances.installFailed = new buttonInstance(
     "Update installation failed…",
-    colors.reverse,
-    colors.danger
+    MPU.colors.reverse,
+    MPU.colors.danger
   );
   if (currentInstance && this.instances[currentInstance]) {
     this.instances.current = this.instances[currentInstance];
@@ -294,50 +294,50 @@ function isOnButton(x, y, btn) {
 *
 */
 function onidle(x, y) {
-  var onButton = isOnButton(x, y, button);
-  if (onButton && button.state !== 1 && button.instances.current.enabled) {
+  var onButton = isOnButton(x, y, MPU.button);
+  if (onButton && MPU.button.state !== 1 && MPU.button.instances.current.enabled) {
     // when mouse first hovers over button
-    button.state = 1;
+    MPU.button.state = 1;
     mgraphics.redraw();
-    post(button.state, "\n");
-  } else if (!onButton && button.state !== 0) {
+    post(MPU.button.state, "\n");
+  } else if (!onButton && MPU.button.state !== 0) {
     // when mouse first leaves button
-    button.state = 0;
+    MPU.button.state = 0;
     mgraphics.redraw();
-    post(button.state, "\n");
+    post(MPU.button.state, "\n");
   }
 }
 function onclick(x, y) {
-  if (isOnButton(x, y, button) && button.state !== 2 && button.instances.current.enabled) {
+  if (isOnButton(x, y, MPU.button) && MPU.button.state !== 2 && MPU.button.instances.current.enabled) {
     // when mouse first clicks on button
-    button.state = 2;
-    if (button.instances.current.action === checkForUpdates) {
-      button.instances.current.action();
-      button.instances.current = button.instances.checkingForUpdates;
-    } else if (button.call === installUpdate) {
-      button.instances.current.action();
-      button.instances.current = button.instances.installingUpdate;
+    MPU.button.state = 2;
+    if (MPU.button.instances.current.action === checkForUpdates) {
+      MPU.button.instances.current.action();
+      MPU.button.instances.current = MPU.button.instances.checkingForUpdates;
+    } else if (MPU.button.call === installUpdate) {
+      MPU.button.instances.current.action();
+      MPU.button.instances.current = MPU.button.instances.installingUpdate;
     }
     mgraphics.redraw();
-    post(button.state, "\n");
-  } else if (button.state !== 0) {
+    post(MPU.button.state, "\n");
+  } else if (MPU.button.state !== 0) {
     // when click is not on the button
-    button.state = 0;
+    MPU.button.state = 0;
     mgraphics.redraw();
-    post(button.state, "\n");
+    post(MPU.button.state, "\n");
   }
 }
 function ondrag(x, y, click) {
-  if (isOnButton(x, y, button) && click === 1 && button.state !== 2 && button.instances.current.enabled) {
+  if (isOnButton(x, y, MPU.button) && click === 1 && MPU.button.state !== 2 && MPU.button.instances.current.enabled) {
     // when mouse first clicks on button
-    button.state = 2;
+    MPU.button.state = 2;
     mgraphics.redraw();
-    post(button.state, "\n");
-  } else if (click === 0 && button.state !== 0) {
+    post(MPU.button.state, "\n");
+  } else if (click === 0 && MPU.button.state !== 0) {
     // when mouse finishes clicking (on mouse up)
-    button.state = 0;
+    MPU.button.state = 0;
     mgraphics.redraw();
-    post(button.state, "\n");
+    post(MPU.button.state, "\n");
   }
 }
 
