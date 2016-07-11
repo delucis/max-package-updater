@@ -5,8 +5,10 @@
 
 autowatch = 1;
 
-// execute jsui test function
-testJSUI();
+// initialise Mgraphics
+mgraphics.init();
+mgraphics.relative_coords = 0;
+mgraphics.autofill = 0;
 
 // post package details to Max window on startup
 var lPinfo = new localPackageInfo();
@@ -14,97 +16,326 @@ post("\n" + lPinfo.name + ", v" + lPinfo.version);
 post("\n     ", lPinfo.author, "\n");
 post("\n     ", lPinfo.dir, "\n");
 
-// request remote package information
+// initialise request/remote package variables
+var rPinfo;
 var request;
-requestRemotePackage(lPinfo, function () {
-  var rPinfo = new remotePackageInfo(request.response);
-  if (validateRemotePackageInfo(lPinfo, rPinfo)) {
-    // compare versions (or pass function)
-    if (isUpdateAvailable(lPinfo, rPinfo)) {
-      post("An update is available!");
+
+// request remote package information
+function checkForUpdates() {
+  requestRemotePackage(lPinfo, function () {
+    rPinfo = new remotePackageInfo(request.response);
+    if (validateRemotePackageInfo(lPinfo, rPinfo)) {
+      // compare versions (or pass function)
+      if (isUpdateAvailable(lPinfo, rPinfo)) {
+        button.instances.current = button.instances.installUpdate;
+        post("An update is available!");
+      } else {
+        button.instances.current = button.instances.upToDate;
+        post("Your package is up-to-date.");
+      }
     } else {
-      post("Your package is up-to-date.");
+      error("Error: failed to retrieve remote package.json...\n");
     }
-  } else {
-    error("Error: failed to retrieve remote package.json...\n");
+    mgraphics.redraw();
+  });
+}
+
+// variables for use in mgraphics
+var MPU = new Object;
+var margins = {
+  x:        30,
+  y:        20
+}
+var colors = {
+  bg:       [1.,    1.,    1.,    1.],
+  reverse:  [1.,    1.,    1.,    1.],
+  text:     [0.15,  0.15,  0.15,  1.],
+  success:  [0.54,  0.75,  0.38,  1.],
+  info:     [0.33,  0.54,  0.73,  1.],
+  neutral:  [0.88,  0.88,  0.88,  1.],
+  danger:   [0.82,  0.41,  0.42,  1.]
+}
+var fontFamily = {
+  light:    "Lato Regular",
+  regular:  "Lato Semibold",
+  bold:     "Lato Heavy"
+}
+var fontSizes = {
+  h1:       "28",
+  h2:       "15",
+  p:        "14"
+}
+var button = new Button([margins.x, 150, 285, 45]);
+
+function paint() {
+  // draw package name heading
+  drawH1(lPinfo.name ? lPinfo.name : "<unknown>", [0, 0]);
+  // draw "local version" subheading
+  drawH2("local version", [0, 60]);
+  // draw local version number
+  drawP(lPinfo.version ? lPinfo.version : "<unknown>", [0, 90]);
+  // draw remote version number, if known
+  if (rPinfo && rPinfo.version) {
+    drawH2("remote version", [155, 60]);
+    drawP(rPinfo.version, [155, 90]);
   }
-});
+  // draw button
+  drawButton(button);
+}
+
+function drawH1(text, pos) {
+  drawText(text, pos, fontFamily.bold, fontSizes.h1, colors.text);
+}
+
+function drawH2(text, pos) {
+  drawText(text, pos, fontFamily.light, fontSizes.h2, colors.info);
+}
+
+function drawP(text, pos) {
+  drawText(text, pos, fontFamily.regular, fontSizes.p, colors.text);
+}
+
+function drawText(text, pos, font, size, color) {
+  mgraphics.select_font_face(font);
+  mgraphics.set_font_size(size);
+  mgraphics.move_to(margins.x + pos[0], margins.y + pos[1] + mgraphics.font_extents()[0]);
+  mgraphics.set_source_rgba(color);
+  mgraphics.text_path(text);
+  mgraphics.fill();
+}
 
 /**
-* testJSUI()
+* drawButton(btn)
+* paint the call-to-action button using Mgraphics from a
+* button object generated using Button()
+*
+* arguments:
+* btn               = (object)  button object generated with Button()
+*
+* usage:
+* myButton = new Button([20, 150, 285, 45]);
+* drawButton(myButton);
+* => renders the button in its current state in the JSUI object
 *
 */
-function testJSUI() {
-  post("Testing jsui...\n");
-  var backgroundColor = [1,1,1,1];
-  var color = [0,0,0,1];
-  var fontFamily = "Lato Regular";
-  var fontSize = 13;
-  var content = "foo";
-  with (sketch) {
-    default2d();
-    glclearcolor(backgroundColor);
-    glclear();
-    glcolor(color);
-    moveto(0,0);
-    font(fontFamily);
-    fontsize(fontSize);
-    textalign("center","center");
-		text(content);
+function drawButton(btn) {
+  // Move text down 1 pixel and lighten background colour on mouse hover
+  var textOffset;
+  if (btn.state === 1) {
+    btn.instances.current.background[3] = 0.8;
+    textOffset = 1;
+  } else {
+    btn.instances.current.background[3] = 1.;
+    textOffset = 0;
   }
-  drawBaseGUI();
+  // Draw button rectangle
+  mgraphics.set_source_rgba(btn.instances.current.background);
+  mgraphics.rectangle(btn.rect);
+  mgraphics.fill();
+  // Draw button text
+  mgraphics.select_font_face(fontFamily.bold);
+  mgraphics.set_font_size(fontSizes.p);
+  // Calculate text position
+  var Xcoord = margins.x + (btn.rect[2] / 2) - (mgraphics.text_measure(btn.instances.current.text)[0] / 2);
+  var Ycoord = margins.y + btn.rect[1] + (mgraphics.font_extents()[0] / 2) + textOffset;
+  mgraphics.move_to(Xcoord, Ycoord);
+  mgraphics.set_source_rgba(btn.instances.current.color);
+  mgraphics.text_path(btn.instances.current.text);
+  mgraphics.fill();
 }
 
-function onresize() {
-  testJSUI();
+/**
+* Button(rect, [currentInstance])
+* returns a javascript object with properties that define the main
+* call-to-action button
+*
+* arguments:
+* rect              = (array)   [x, y, width, height] defining button rectangle
+* currentInstance   = (string)  member of this.instances that is active (optional)
+*
+* usage:
+* button = new Button([20, 150, 285, 45]);
+* button => {
+*   rect: [20, 150, 285, 45],
+*   state: 0,
+*   instances: {
+*     // series of instances created using buttonInstance()
+*     ...
+*     // `instances.current` is set to `instances.checkForUpdates` by default.
+*     current: {
+*       text: "Check for updates",
+*       color: [1, 1, 1, 1],
+*       background: [0.33,  0.54,  0.73,  1.],
+*       action: checkForUpdates,
+*       enabled: true
+*     }
+*   }
+* }
+*
+*/
+function Button(rect, currentInstance) {
+  this.rect = rect;
+  this.state = 0;
+  this.instances = new Object();
+  this.instances.checkForUpdates = new buttonInstance(
+    "Check for updates",
+    colors.reverse,
+    colors.info,
+    checkForUpdates
+  );
+  this.instances.checkingForUpdates = new buttonInstance(
+    "Checking for updates...",
+    colors.text,
+    colors.neutral
+  );
+  this.instances.upToDate = new buttonInstance(
+    "Your package is up to date!",
+    colors.text,
+    colors.neutral
+  );
+  this.instances.installUpdate = new buttonInstance(
+    "Install update",
+    colors.reverse,
+    colors.success,
+    installUpdate
+  );
+  this.instances.installingUpdate = new buttonInstance(
+    "Installing update...",
+    colors.text,
+    colors.neutral
+  );
+  this.instances.updateInstalled = new buttonInstance(
+    "Update installed!",
+    colors.text,
+    colors.neutral
+  );
+  this.instances.updateFailed = new buttonInstance(
+    "Update installation failed…",
+    colors.reverse,
+    colors.danger
+  );
+  if (currentInstance && this.instances[currentInstance]) {
+    this.instances.current = this.instances[currentInstance];
+  } else {
+    this.instances.current = this.instances.checkForUpdates;
+  }
 }
 
-function drawBaseGUI() {
-  post("Drawing base GUI...\n");
-  var margins = new Object();
-  margins.x = 30;
-  margins.y = 20;
-  var colors = new Object();
-  colors.bg = [1, 1, 1, 1];
-  colors.text = [0, 0, 0, 1];
-  colors.highlight = [0.33, 0.54, 0.73, 1];
-  var fontFamily = new Object();
-  fontFamily.light = "Lato Light"
-  fontFamily.regular = "Lato Regular";
-  fontFamily.bold = "Lato Bold";
-  var fontSizes = new Object();
-  fontSizes.h1 = "28";
-  fontSizes.h2 = "15";
-  fontSizes.p = "14";
-  var content = "foo";
-  var localInf = new localPackageInfo();
-  with (sketch) {
-    default2d();
-    glclearcolor(colors.bg);
-    glclear();
-    textalign("left", "top");
-
-    // draw package name heading
-    moveto(screentoworld(margins.x, margins.y));
-    font(fontFamily.bold);
-    fontsize(fontSizes.h1);
-    glcolor(colors.text);
-		text(localInf.name);
-
-    // draw "local version" subheading
-    moveto(screentoworld(margins.x, margins.y+60));
-    font(fontFamily.light);
-    fontsize(fontSizes.h2);
-    glcolor(colors.highlight);
-    text("local version");
-
-    // draw local version number
-    moveto(screentoworld(margins.x, margins.y+90));
-    font(fontFamily.regular);
-    fontsize(fontSizes.p);
-    glcolor(colors.text);
-    text(localInf.version);
+/**
+* buttonInstance(text, color, background, [action])
+* returns a javascript object with properties that define an instance
+* of the main call-to-action button
+*
+* arguments:
+* text              = (string)    text to be displayed on the button
+* color             = (array)     RGBA colour definition for button text
+* background        = (array)     RGBA colour definition for button background
+* action [optional] = (function)  function that is called on click
+*
+* usage:
+* myButton = new buttonInstance("I’m a button!", [0, 0, 0, 1], [0.5, 1, 0.5, 1], clickFunction);
+* myButton => {
+*   text: "I’m a button!",
+*   color: [0, 0, 0, 1],
+*   background: [0.5, 1, 0.5, 1],
+*   action: clickFunction,
+*   enabled: true
+* }
+*
+* The `enabled` property is set to true if an `action` is provided, false if not.
+*
+*/
+function buttonInstance(text, color, background, action) {
+  this.text = text;
+  this.color = color;
+  this.background = background;
+  if (action) {
+    this.action = action;
+    this.enabled = true;
+  } else {
+    this.enabled = false;
   }
+}
+
+/**
+* isOnButton(x, y, btn)
+* returns true if point [x, y] is within the bounds of the Button() provided
+* as the the third argument (specifically reads from btn.rect)
+*
+* arguments:
+* x                 = (number)    X co-ordinate of point to test
+* y                 = (number)    Y co-ordinate of point to test
+* btn               = (object)    button object as created by Button()
+*
+* usage:
+* isOnButton(10, 10, Button([0, 0, 245, 45]));
+* => true
+* isOnButton(300, 300, Button([0, 0, 245, 45]));
+* => false
+*
+*/
+function isOnButton(x, y, btn) {
+  var inXBounds = (x >= btn.rect[0]) && (x <= btn.rect[0] + btn.rect[2]);
+  var inYBounds = (y >= btn.rect[1]) && (y <= btn.rect[1] + btn.rect[3]);
+  return inXBounds && inYBounds;
+}
+
+/**
+* JSUI MOUSE INTERACTION EVENTS
+*
+* onidle(), onclick(), ondrag()
+* handle interaction with the call-to-action button.
+*
+*/
+function onidle(x, y) {
+  if (isOnButton(x, y, button) && button.state !== 1 && button.instances.current.enabled) {
+    // when mouse first hovers over button
+    button.state = 1;
+    mgraphics.redraw();
+    post(button.state, "\n");
+  } else if (button.state !== 0) {
+    // when mouse first leaves button
+    button.state = 0;
+    mgraphics.redraw();
+    post(button.state, "\n");
+  }
+}
+function onclick(x, y) {
+  if (isOnButton(x, y, button) && button.state !== 2 && button.instances.current.enabled) {
+    // when mouse first clicks on button
+    button.state = 2;
+    if (button.instances.current.action === checkForUpdates) {
+      button.instances.current.action();
+      button.instances.current = button.instances.checkingForUpdates;
+    } else if (button.call === installUpdate) {
+      button.instances.current.action();
+      button.instances.current = button.instances.installingUpdate;
+    }
+    mgraphics.redraw();
+    post(button.state, "\n");
+  } else if (button.state !== 0) {
+    // when click is not on the button
+    button.state = 0;
+    mgraphics.redraw();
+    post(button.state, "\n");
+  }
+}
+function ondrag(x, y, click) {
+  if (isOnButton(x, y, button) && click === 1 && button.state !== 2 && button.instances.current.enabled) {
+    // when mouse first clicks on button
+    button.state = 2;
+    mgraphics.redraw();
+    post(button.state, "\n");
+  } else if (click === 0 && button.state !== 0) {
+    // when mouse finishes clicking (on mouse up)
+    button.state = 0;
+    mgraphics.redraw();
+    post(button.state, "\n");
+  }
+}
+
+function installUpdate() {
+  post("Installing update...\n");
 }
 
 /**
