@@ -41,29 +41,30 @@ function checkForUpdates() {
 }
 
 // variables for use in mgraphics
-var MPU = new Object;
-MPU.margins = {
-  x:        30,
-  y:        20
-}
-MPU.colors = {
-  bg:       [1.,    1.,    1.,    1.],
-  reverse:  [1.,    1.,    1.,    1.],
-  text:     [0.15,  0.15,  0.15,  1.],
-  success:  [0.54,  0.75,  0.38,  1.],
-  info:     [0.33,  0.54,  0.73,  1.],
-  neutral:  [0.88,  0.88,  0.88,  1.],
-  danger:   [0.82,  0.41,  0.42,  1.]
-}
-MPU.fontFamily = {
-  light:    "Lato Regular",
-  regular:  "Lato Semibold",
-  bold:     "Lato Heavy"
-}
-MPU.fontSizes = {
-  h1:       "28",
-  h2:       "15",
-  p:        "14"
+var MPU = {
+  margins: {
+    x:        30,
+    y:        20
+  },
+  colors: {
+    bg:       [1.,    1.,    1.,    1.],
+    reverse:  [1.,    1.,    1.,    1.],
+    text:     [0.15,  0.15,  0.15,  1.],
+    success:  [0.54,  0.75,  0.38,  1.],
+    info:     [0.33,  0.54,  0.73,  1.],
+    neutral:  [0.88,  0.88,  0.88,  1.],
+    danger:   [0.82,  0.41,  0.42,  1.]
+  },
+  fontFamily: {
+    light:    "Lato Regular",
+    regular:  "Lato Semibold",
+    bold:     "Lato Heavy"
+  },
+  fontSizes: {
+    h1:       "28",
+    h2:       "15",
+    p:        "14"
+  }
 }
 MPU.button = new Button([MPU.margins.x, 150, 285, 45]);
 
