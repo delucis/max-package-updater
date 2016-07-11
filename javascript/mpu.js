@@ -30,7 +30,7 @@ function checkForUpdates() {
         button.instances.current = button.instances.installUpdate;
         post("An update is available!");
       } else {
-        button.instances.current = button.instances.upToDate;
+        button.instances.current = button.instances.checkUpToDate;
         post("Your package is up-to-date.");
       }
     } else {
@@ -188,7 +188,7 @@ function Button(rect, currentInstance) {
     colors.text,
     colors.neutral
   );
-  this.instances.upToDate = new buttonInstance(
+  this.instances.checkUpToDate = new buttonInstance(
     "Your package is up to date!",
     colors.text,
     colors.neutral
@@ -210,12 +210,12 @@ function Button(rect, currentInstance) {
     colors.text,
     colors.neutral
   );
-  this.instances.updateInstalled = new buttonInstance(
+  this.instances.installSucceeded = new buttonInstance(
     "Update installed!",
     colors.text,
     colors.neutral
   );
-  this.instances.updateFailed = new buttonInstance(
+  this.instances.installFailed = new buttonInstance(
     "Update installation failed…",
     colors.reverse,
     colors.danger
