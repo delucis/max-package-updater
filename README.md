@@ -8,7 +8,7 @@ See progress [over on issue #1](https://github.com/delucis/max-package-updater/i
 
 ## Specifying a remote `package.json`
 
-### Github repositories
+### GitHub repositories
 
 By default, Max Package Updater tries to work with [the standard npm `package.json` format](https://docs.npmjs.com/files/package.json), and assumes a remote package is hosted on GitHub.
 
