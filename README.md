@@ -36,7 +36,7 @@ Both of the above resolve to:
 
 ### Self-hosted
 
-If you want to use an alternative hosting mechanism, and want to specify the precise URL of your remote `package.json`, you can do so in the `config` section of your `package.json`:
+If you want to use an alternative hosting mechanism, and want to specify the precise URL of your remote `package.json`, you can do so in [the `config` section](https://docs.npmjs.com/files/package.json#config) of your `package.json`:
 
 ```json
 {
