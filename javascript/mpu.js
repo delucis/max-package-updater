@@ -67,18 +67,19 @@ var MPU = {
   }
 }
 MPU.button = new Button([MPU.margins.x, 150, 285, 45]);
+MPU.localPackageInfo = new localPackageInfo();
 
 function paint() {
   // draw package name heading
-  drawH1(lPinfo.name ? lPinfo.name : "<unknown>", [0, 0]);
+  drawH1(MPU.localPackageInfo.name ? MPU.localPackageInfo.name : "<unknown>", [0, 0]);
   // draw "local version" subheading
   drawH2("local version", [0, 60]);
   // draw local version number
-  drawP(lPinfo.version ? lPinfo.version : "<unknown>", [0, 90]);
+  drawP(MPU.localPackageInfo.version ? MPU.localPackageInfo.version : "<unknown>", [0, 90]);
   // draw remote version number, if known
-  if (rPinfo && rPinfo.version) {
+  if (MPU.remotePackageInfo && MPU.remotePackageInfo.version) {
     drawH2("remote version", [155, 60]);
-    drawP(rPinfo.version, [155, 90]);
+    drawP(MPU.remotePackageInfo.version, [155, 90]);
   }
   // draw button
   drawButton(MPU.button);
