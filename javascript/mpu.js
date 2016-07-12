@@ -475,12 +475,12 @@ function remotePackageInfo(response) {
 * request a remote package.json
 *
 * arguments:
-* localPackageInfo  = (object)    as returned by localPackageInfo()
-* request           = (string)    variable name to hold our request
+* mpu               = (object)    full max-package-updater object, including
+*                                 localPackageInfo, assigns request to object
 * callback          = (function)  handle the server response
 *
 * usage:
-* requestRemotePackage(localPackageInfo, function() {
+* requestRemotePackage(MPU, function() {
 *   // handle response
 * });
 *
