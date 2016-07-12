@@ -368,7 +368,7 @@ function validateRemotePackageInfo(localPackageInfo, remotePackageInfo) {
     error("Error: remote package undefined...\n");
     return false;
   } else if (remotePackageInfo.name !== localPackageInfo.name) {
-    error("Error: the remote package’s name, ‘" + remotePackageInfo.name + "’, does not match the local package ‘" + lPinfo.name + "’...\n");
+    error("Error: the remote package’s name, ‘" + remotePackageInfo.name + "’, does not match the local package ‘" + localPackageInfo.name + "’...\n");
     return false;
   } else if (!remotePackageInfo.version) {
     error("Error: remote package.json doesn’t contain a version field...\n");
