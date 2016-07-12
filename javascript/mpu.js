@@ -22,11 +22,11 @@ var request;
 
 // request remote package information
 function checkForUpdates() {
-  requestRemotePackage(lPinfo, function () {
-    rPinfo = new remotePackageInfo(request.response);
-    if (validateRemotePackageInfo(lPinfo, rPinfo)) {
+  requestRemotePackage(MPU, function () {
+    MPU.remotePackageInfo = new remotePackageInfo(MPU.request.response);
+    if (validateRemotePackageInfo(MPU.localPackageInfo, MPU.remotePackageInfo)) {
       // compare versions (or pass function)
-      if (isUpdateAvailable(lPinfo, rPinfo)) {
+      if (isUpdateAvailable(MPU.localPackageInfo, MPU.remotePackageInfo)) {
         MPU.button.instances.current = MPU.button.instances.installUpdate;
         post("An update is available!");
       } else {
@@ -485,23 +485,23 @@ function remotePackageInfo(response) {
 * });
 *
 */
-function requestRemotePackage(localPackageInfo, callback) {
+function requestRemotePackage(mpu, callback) {
   // make sure a callback function is provided
   if (!callback || typeof callback !== "function") {
     error("Error: no callback function defined for requestRemotePackage()...\n");
     return false;
   }
   // figure out what URL to query based on local package.json
-  var packageInfoURL = getPackageInfoURL(localPackageInfo);
+  var packageInfoURL = getPackageInfoURL(mpu.localPackageInfo);
   if (packageInfoURL) {
     // create new request object
-    request = new XMLHttpRequest();
+    mpu.request = new XMLHttpRequest();
     // request the URL of the remote package.json
-    request.open("GET", packageInfoURL);
+    mpu.request.open("GET", packageInfoURL);
     // set callback function
-    request.onreadystatechange = callback;
+    mpu.request.onreadystatechange = callback;
     // trigger request
-    request.send();
+    mpu.request.send();
   } else {
     return false;
   }
