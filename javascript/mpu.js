@@ -41,12 +41,14 @@ function checkForUpdates() {
 }
 
 // variables for use in mgraphics
-var MPU = {
-  margins: {
+var MPU = new MPUDOM();
+
+function MPUDOM() {
+  this.margins = {
     x:        30,
     y:        20
-  },
-  colors: {
+  };
+  this.colors = {
     bg:       [1.,    1.,    1.,    1.],
     reverse:  [1.,    1.,    1.,    1.],
     text:     [0.15,  0.15,  0.15,  1.],
@@ -54,20 +56,20 @@ var MPU = {
     info:     [0.33,  0.54,  0.73,  1.],
     neutral:  [0.88,  0.88,  0.88,  1.],
     danger:   [0.82,  0.41,  0.42,  1.]
-  },
-  fontFamily: {
+  };
+  this.fontFamily = {
     light:    "Lato Regular",
     regular:  "Lato Semibold",
     bold:     "Lato Heavy"
-  },
-  fontSizes: {
+  };
+  this.fontSizes = {
     h1:       "28",
     h2:       "15",
     p:        "14"
-  }
+  };
+  this.button = new Button([this.margins.x, 150, 285, 45], this);
+  this.localPackageInfo = new localPackageInfo();
 }
-MPU.button = new Button([MPU.margins.x, 150, 285, 45]);
-MPU.localPackageInfo = new localPackageInfo();
 
 function paint() {
   // draw package name heading
