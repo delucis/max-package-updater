@@ -59,6 +59,16 @@ function checkForUpdates() {
   });
 }
 
+/**
+* MPUDOM()
+* create an instance of the Max Package Updater Data Object Model
+*
+* usage:
+* var mpuDOM = new MPUDOM();
+* mpuDOM.margins.x;
+* => 30;
+*
+*/
 function MPUDOM() {
   this.margins = {
     x:        30,
