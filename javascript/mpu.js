@@ -40,16 +40,16 @@ function postPackageDetails(lPinfo) {
 }
 
 // request remote package information
-function checkForUpdates() {
-  requestRemotePackage(MPU, function () {
-    MPU.remotePackageInfo = new remotePackageInfo(MPU.request.response);
-    if (validateRemotePackageInfo(MPU.localPackageInfo, MPU.remotePackageInfo)) {
+function checkForUpdates(mpu) {
+  requestRemotePackage(mpu, function () {
+    mpu.remotePackageInfo = new remotePackageInfo(mpu.request.response);
+    if (validateRemotePackageInfo(mpu.localPackageInfo, mpu.remotePackageInfo)) {
       // compare versions (or pass function)
-      if (isUpdateAvailable(MPU.localPackageInfo, MPU.remotePackageInfo)) {
-        MPU.button.instances.current = MPU.button.instances.installUpdate;
+      if (isUpdateAvailable(mpu.localPackageInfo, mpu.remotePackageInfo)) {
+        mpu.button.instances.current = mpu.button.instances.installUpdate;
         post("An update is available!");
       } else {
-        MPU.button.instances.current = MPU.button.instances.checkUpToDate;
+        mpu.button.instances.current = mpu.button.instances.checkUpToDate;
         post("Your package is up-to-date.");
       }
     } else {
@@ -343,7 +343,7 @@ function onclick(x, y) {
     // when mouse first clicks on button
     MPU.button.state = 2;
     if (MPU.button.instances.current.action === checkForUpdates) {
-      MPU.button.instances.current.action();
+      MPU.button.instances.current.action(MPU);
       MPU.button.instances.current = MPU.button.instances.checkingForUpdates;
     } else if (MPU.button.call === installUpdate) {
       MPU.button.instances.current.action();
