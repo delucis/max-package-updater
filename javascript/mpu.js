@@ -14,10 +14,30 @@ mgraphics.autofill = 0;
 var MPU = new MPUDOM();
 
 // post package details to Max window on startup
-var lPinfo = new localPackageInfo();
-post("\n" + lPinfo.name + ", v" + lPinfo.version);
-post("\n     ", lPinfo.author, "\n");
-post("\n     ", lPinfo.dir, "\n");
+postPackageDetails(MPU.localPackageInfo);
+
+/**
+* postPackageDetails(lPinfo)
+* posts the package’s name, version, author information, and local path
+* to the Max window
+*
+* arguments:
+* lPinfo            = (object)  localPackageInfo object
+*
+* usage:
+* var lpi = new localPackageInfo();
+* postPackageDetails(lpi);
+* => [posts the following to the Max window]
+*    package name, vX.X.X
+*    author field
+*    local/path/to/package
+*
+*/
+function postPackageDetails(lPinfo) {
+  post("\n" + lPinfo.name + ", v" + lPinfo.version);
+  post("\n     ", lPinfo.author, "\n");
+  post("\n     ", lPinfo.dir, "\n");
+}
 
 // request remote package information
 function checkForUpdates() {
