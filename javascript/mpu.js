@@ -10,6 +10,9 @@ mgraphics.init();
 mgraphics.relative_coords = 0;
 mgraphics.autofill = 0;
 
+// variables for use in mgraphics
+var MPU = new MPUDOM();
+
 // post package details to Max window on startup
 var lPinfo = new localPackageInfo();
 post("\n" + lPinfo.name + ", v" + lPinfo.version);
@@ -35,9 +38,6 @@ function checkForUpdates() {
     mgraphics.redraw();
   });
 }
-
-// variables for use in mgraphics
-var MPU = new MPUDOM();
 
 function MPUDOM() {
   this.margins = {
