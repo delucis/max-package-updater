@@ -16,10 +16,6 @@ post("\n" + lPinfo.name + ", v" + lPinfo.version);
 post("\n     ", lPinfo.author, "\n");
 post("\n     ", lPinfo.dir, "\n");
 
-// initialise request/remote package variables
-var rPinfo;
-var request;
-
 // request remote package information
 function checkForUpdates() {
   requestRemotePackage(MPU, function () {
