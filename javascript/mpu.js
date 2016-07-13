@@ -153,10 +153,11 @@ function drawButton(btn) {
 *
 * arguments:
 * rect              = (array)   [x, y, width, height] defining button rectangle
+* mpu               = (object)  MPUDOM() which provides colour variables
 * currentInstance   = (string)  member of this.instances that is active (optional)
 *
 * usage:
-* button = new Button([20, 150, 285, 45]);
+* button = new Button([20, 150, 285, 45], myMPUDOM);
 * button => {
 *   rect: [20, 150, 285, 45],
 *   state: 0,
@@ -175,52 +176,52 @@ function drawButton(btn) {
 * }
 *
 */
-function Button(rect, currentInstance) {
+function Button(rect, mpu, currentInstance) {
   this.rect = rect;
   this.state = 0;
   this.instances = new Object();
   this.instances.checkForUpdates = new buttonInstance(
     "Check for updates",
-    MPU.colors.reverse,
-    MPU.colors.info,
+    mpu.colors.reverse,
+    mpu.colors.info,
     checkForUpdates
   );
   this.instances.checkingForUpdates = new buttonInstance(
     "Checking for updates...",
-    MPU.colors.text,
-    MPU.colors.neutral
+    mpu.colors.text,
+    mpu.colors.neutral
   );
   this.instances.checkUpToDate = new buttonInstance(
     "Your package is up to date!",
-    MPU.colors.text,
-    MPU.colors.neutral
+    mpu.colors.text,
+    mpu.colors.neutral
   );
   this.instances.checkFailed = new buttonInstance(
     "Couldn’t check for updates… Try again?",
-    MPU.colors.reverse,
-    MPU.colors.danger,
+    mpu.colors.reverse,
+    mpu.colors.danger,
     checkForUpdates
   );
   this.instances.installUpdate = new buttonInstance(
     "Install update",
-    MPU.colors.reverse,
-    MPU.colors.success,
+    mpu.colors.reverse,
+    mpu.colors.success,
     installUpdate
   );
   this.instances.installingUpdate = new buttonInstance(
     "Installing update...",
-    MPU.colors.text,
-    MPU.colors.neutral
+    mpu.colors.text,
+    mpu.colors.neutral
   );
   this.instances.installSucceeded = new buttonInstance(
     "Update installed!",
-    MPU.colors.text,
-    MPU.colors.neutral
+    mpu.colors.text,
+    mpu.colors.neutral
   );
   this.instances.installFailed = new buttonInstance(
     "Update installation failed…",
-    MPU.colors.reverse,
-    MPU.colors.danger
+    mpu.colors.reverse,
+    mpu.colors.danger
   );
   if (currentInstance && this.instances[currentInstance]) {
     this.instances.current = this.instances[currentInstance];
