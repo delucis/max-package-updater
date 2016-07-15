@@ -8,7 +8,7 @@ autowatch = 1;
 // initialise Mgraphics
 initialiseMgraphics();
 // create object holding all the relevant module variables
-var MPU = new MPUDOM();
+var MPU = new mpuDOM();
 // post package details to Max window on startup
 postPackageDetails(MPU.localPackageInfo);
 
@@ -65,16 +65,16 @@ function checkForUpdates(mpu) {
 }
 
 /**
-* MPUDOM()
+* mpuDOM()
 * create an instance of the Max Package Updater Data Object Model
 *
 * usage:
-* var mpuDOM = new MPUDOM();
+* var mpuDOM = new mpuDOM();
 * mpuDOM.margins.x;
 * => 30;
 *
 */
-function MPUDOM() {
+function mpuDOM() {
   this.margins = {
     x:        30,
     y:        20
@@ -198,7 +198,7 @@ function drawButton(btn) {
 *
 * arguments:
 * rect              = (array)   [x, y, width, height] defining button rectangle
-* mpu               = (object)  MPUDOM() which provides colour variables
+* mpu               = (object)  mpuDOM() which provides colour variables
 * currentInstance   = (string)  member of this.instances that is active (optional)
 *
 * usage:
