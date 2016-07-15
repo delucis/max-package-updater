@@ -35,21 +35,28 @@ function postPackageDetails(lPinfo) {
   post("\n     ", lPinfo.dir, "\n");
 }
 
-// request remote package information
 function checkForUpdates(mpu) {
+  // update button state to ‘Checking for updates…’
   mpu.button.instances.current = mpu.button.instances.checkingForUpdates;
+  // request remote package information
   requestRemotePackage(mpu, function () {
+    // try to convert server response into package info object
     mpu.remotePackageInfo = new remotePackageInfo(mpu.request.response);
+    // validate remote package.json against local copy (names must match,
+    // and remote package.json must contain a version field)
     if (validateRemotePackageInfo(mpu.localPackageInfo, mpu.remotePackageInfo)) {
       // compare versions (or pass function)
       if (isUpdateAvailable(mpu.localPackageInfo, mpu.remotePackageInfo)) {
+        // update button state to ‘Install update’
         mpu.button.instances.current = mpu.button.instances.installUpdate;
         post("An update to v" + mpu.remotePackageInfo.version + " is available!");
       } else {
+        // update button state to ‘Your package is up-to-date!’
         mpu.button.instances.current = mpu.button.instances.checkUpToDate;
         post("Your package is up-to-date.");
       }
     } else {
+      // update button state to ‘Couldn’t check for updates… Try again?’
       mpu.button.instances.current = mpu.button.instances.checkFailed;
       error("Error: failed to retrieve remote package.json...\n");
     }
