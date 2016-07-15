@@ -47,7 +47,7 @@ function checkForUpdates(mpu) {
       // compare versions (or pass function)
       if (isUpdateAvailable(mpu.localPackageInfo, mpu.remotePackageInfo)) {
         mpu.button.instances.current = mpu.button.instances.installUpdate;
-        post("An update is available!");
+        post("An update to v" + mpu.remotePackageInfo.version + " is available!");
       } else {
         mpu.button.instances.current = mpu.button.instances.checkUpToDate;
         post("Your package is up-to-date.");
