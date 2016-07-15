@@ -6,13 +6,9 @@
 autowatch = 1;
 
 // initialise Mgraphics
-mgraphics.init();
-mgraphics.relative_coords = 0;
-mgraphics.autofill = 0;
-
-// variables for use in mgraphics
+initialiseMgraphics();
+// create object holding all the relevant module variables
 var MPU = new MPUDOM();
-
 // post package details to Max window on startup
 postPackageDetails(MPU.localPackageInfo);
 
@@ -96,6 +92,18 @@ function MPUDOM() {
   };
   this.button = new Button([this.margins.x, 150, 285, 45], this);
   this.localPackageInfo = new localPackageInfo();
+}
+
+/**
+* initialiseMgraphics()
+* run the initialisation steps required to get
+* the Mgraphics system up and running
+*
+*/
+function initialiseMgraphics() {
+  mgraphics.init();
+  mgraphics.relative_coords = 0;
+  mgraphics.autofill = 0;
 }
 
 function paint() {
