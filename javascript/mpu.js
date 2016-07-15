@@ -37,6 +37,7 @@ function postPackageDetails(lPinfo) {
 
 // request remote package information
 function checkForUpdates(mpu) {
+  mpu.button.instances.current = mpu.button.instances.checkingForUpdates;
   requestRemotePackage(mpu, function () {
     mpu.remotePackageInfo = new remotePackageInfo(mpu.request.response);
     if (validateRemotePackageInfo(mpu.localPackageInfo, mpu.remotePackageInfo)) {
@@ -351,12 +352,8 @@ function onclick(x, y) {
   if (isOnButton(x, y, MPU.button) && MPU.button.state !== 2 && MPU.button.instances.current.enabled) {
     // when mouse first clicks on button
     MPU.button.state = 2;
-    if (MPU.button.instances.current.action === checkForUpdates) {
+    if (MPU.button.instances.current.action) {
       MPU.button.instances.current.action(MPU);
-      MPU.button.instances.current = MPU.button.instances.checkingForUpdates;
-    } else if (MPU.button.call === installUpdate) {
-      MPU.button.instances.current.action();
-      MPU.button.instances.current = MPU.button.instances.installingUpdate;
     }
     mgraphics.redraw();
     post(MPU.button.state, "\n");
@@ -381,7 +378,8 @@ function ondrag(x, y, click) {
   }
 }
 
-function installUpdate() {
+function installUpdate(mpu) {
+  mpu.button.instances.current = mpu.button.instances.installingUpdate;
   post("Installing update...\n");
 }
 
