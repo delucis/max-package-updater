@@ -53,6 +53,7 @@ function checkForUpdates(mpu) {
         post("Your package is up-to-date.");
       }
     } else {
+      mpu.button.instances.current = mpu.button.instances.checkFailed;
       error("Error: failed to retrieve remote package.json...\n");
     }
     mgraphics.redraw();
