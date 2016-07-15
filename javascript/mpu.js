@@ -74,6 +74,11 @@ function checkForUpdates(mpu) {
   });
 }
 
+function installUpdate(mpu) {
+  mpu.button.instances.current = mpu.button.instances.installingUpdate;
+  post("Installing update...\n");
+}
+
 /**
 * mpuDOM()
 * create an instance of the Max Package Updater Data Object Model
@@ -393,11 +398,6 @@ function ondrag(x, y, click) {
     mgraphics.redraw();
     post(MPU.button.state, "\n");
   }
-}
-
-function installUpdate(mpu) {
-  mpu.button.instances.current = mpu.button.instances.installingUpdate;
-  post("Installing update...\n");
 }
 
 /**
